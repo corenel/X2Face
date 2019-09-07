@@ -23,9 +23,10 @@ class VoxCeleb(data.Dataset):
                 self.rng = np.random.RandomState(random_seed)
 
                 # Update the npz files with the name that you downloaded it to from the website
-                assert(os.path.exists('/scratch/local/ssd/ow/faces/datasets/voxceleb/landmarks_samevideoimg_%d25thframe_5imgs_%d.npz' % (dataset, num_views)))
+                print dataset, num_views
+                assert(os.path.exists('/app/data/unzippedFaces/files/landmarks_samevideoimg_%d25thframe_5imgs_%d.npz' % (dataset, num_views)))
 
-                files = np.load('/scratch/local/ssd/ow/faces/datasets/voxceleb/landmarks_samevideoimg_%d25thframe_5imgs_%d.npz' % (dataset, num_views))
+                files = np.load('/app/data/unzippedFaces/files/landmarks_samevideoimg_%d25thframe_5imgs_%d.npz' % (dataset, num_views))
                 self.image_names = files['image_names']
                 self.input_indices = files['input_indices']
                 self.landmarks = files['landmarks']
@@ -46,7 +47,7 @@ class VoxCeleb(data.Dataset):
                 for i in range(0, self.num_views):
                         img_index = int(self.input_indices[index,i]) - 1
                         img_name = self.image_names[img_index][0].astype(np.str)
-                        img_name = img_name.replace('koepke/voxceleb/faces/', 'ow/voxceleb/faces/faces/')
+                        img_name = img_name.replace('/scratch/local/ssd/koepke/voxceleb/faces', '/app/data/unzippedFaces')
                         imgs[i] = Image.open(img_name)
                         imgs[i] = self.transform(imgs[i])
 
