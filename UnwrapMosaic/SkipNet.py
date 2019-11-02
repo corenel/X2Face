@@ -160,12 +160,9 @@ def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropo
         netG = UnetGeneratorBetterUpsampler(input_nc, output_nc, 8, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
     else:
         raise NotImplementedError('Generator model name [%s] is not recognized' % which_model_netG)
-    print 'fuck'
     if len(gpu_ids) > 0:
         netG.cuda()
-    print 'fuck 2'
     init_weights(netG, init_type=init_type)
-    print 'fuck 3'
     return netG
 
 
@@ -249,18 +246,13 @@ class UnetGeneratorBetterUpsampler(nn.Module):
                  norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
         super(UnetGeneratorBetterUpsampler, self).__init__()
         self.gpu_ids = gpu_ids
-        print '00'
         # construct unet structure
         unet_block = UnetSkipConnectionBlockBetterUpsampler(ngf * 8, ngf * 8, input_nc=None, submodule=None, norm_layer=norm_layer, innermost=True)
         for i in range(num_downs - 5):
-            print i
             unet_block = UnetSkipConnectionBlockBetterUpsampler(ngf * 8, ngf * 8, input_nc=None, submodule=unet_block, norm_layer=norm_layer, use_dropout=use_dropout)
         unet_block = UnetSkipConnectionBlockBetterUpsampler(ngf * 4, ngf * 8, input_nc=None, submodule=unet_block, norm_layer=norm_layer)
-        print 2
         unet_block = UnetSkipConnectionBlockBetterUpsampler(ngf * 2, ngf * 4, input_nc=None, submodule=unet_block, norm_layer=norm_layer)
-        print 3
         unet_block = UnetSkipConnectionBlockBetterUpsampler(ngf, ngf * 2, input_nc=None, submodule=unet_block, norm_layer=norm_layer)
-        print 4
         unet_block = UnetSkipConnectionBlockBetterUpsampler(output_nc, ngf, input_nc=input_nc, submodule=unet_block, outermost=True, norm_layer=norm_layer)
 
         self.model = unet_block

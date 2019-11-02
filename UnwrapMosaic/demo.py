@@ -34,7 +34,7 @@ model = model.eval()
 
 
 def load_img(file_path):
-    img = Image.open(file_path)
+    img = Image.open(file_path).convert('RGB')
     transform = Compose([Scale((256, 256)), ToTensor()])
     return Variable(transform(img)).cuda()
 
@@ -82,12 +82,12 @@ def run_demo(source_imgs, driver_imgs, index, save_dir):
 
 
 def replace_path(path):
-    return path.replace('/media/data1/vox', '/app/data/vox')
+    return path.replace('/media/yuthon/Data', '/app/data')
 
 
 if __name__ == '__main__':
-    with open('eval_list.txt', 'r') as f:
+    with open('eval_list_fsnet.txt', 'r') as f:
         eval_list = [l.strip().split(' ') for l in f.readlines()]
     for image_idx, (image_src, image_gt) in tqdm(enumerate(eval_list)):
         run_demo([replace_path(image_src)], [replace_path(image_gt)],
-                 '{:05d}'.format(image_idx), 'eval_results')
+                 '{:05d}'.format(image_idx), 'eval_results_fsnet_2')
